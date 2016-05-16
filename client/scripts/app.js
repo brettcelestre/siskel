@@ -6,6 +6,8 @@ var Movie = Backbone.Model.extend({
 
   toggleLike: function() {
     // your code here
+    // Use .attributes.'propertyName' to change values in model
+    this.attributes.like = false;
   }
 
 });
@@ -16,12 +18,16 @@ var Movies = Backbone.Collection.extend({
 
   initialize: function() {
     // your code here
+    // Trying to create a listener for sorting radio buttons
+    $('input [name=sort_by]');  // .val() - stores the type of button. Then pass to sortByField
   },
 
   comparator: 'title',
 
   sortByField: function(field) {
     // your code here
+    // Sets comparator value to whatever value is passed from initialize
+    this.attributes.comparator = field;
   }
 
 });
