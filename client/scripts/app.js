@@ -6,8 +6,14 @@ var Movie = Backbone.Model.extend({
 
   toggleLike: function() {
     // your code here
-    // Use .attributes.'propertyName' to change values in model
-    this.attributes.like = false;
+    // Check to see if this.get('like') is currently true
+    if ( this.get('like') === true ){
+    // if so, set 'like' to false
+      this.set('like', false);
+    } else {
+      // otherwise, set to true
+      this.set('like', true);
+    }
   }
 
 });
@@ -18,6 +24,11 @@ var Movies = Backbone.Collection.extend({
 
   initialize: function() {
     // your code here
+    //make listener for change to each movie
+    this.on('change', function () {
+      //pass the function to be called when a model changes
+      this.sort();
+    });
     // Trying to create a listener for sorting radio buttons
     $('input [name=sort_by]');  // .val() - stores the type of button. Then pass to sortByField
   },
@@ -26,8 +37,10 @@ var Movies = Backbone.Collection.extend({
 
   sortByField: function(field) {
     // your code here
-    // Sets comparator value to whatever value is passed from initialize
-    this.attributes.comparator = field;
+    // Sets comparator value to whatever value is passed from initia
+    this.comparator = field;
+    //this sorts by new comparator
+    this.sort();
   }
 
 });
@@ -65,6 +78,8 @@ var MovieView = Backbone.View.extend({
 
   initialize: function() {
     // your code here
+    // Use on this.model to listen the attached model and bind render to this view
+    this.model.on('change', this.render, this); 
   },
 
   events: {
@@ -73,6 +88,8 @@ var MovieView = Backbone.View.extend({
 
   handleClick: function() {
     // your code here
+    // Apply .toggleLike to this.model during a click button event
+    this.model.toggleLike();
   },
 
   render: function() {
@@ -86,6 +103,8 @@ var MoviesView = Backbone.View.extend({
 
   initialize: function() {
     // your code here
+    // Listen to this.collection and on a 'sort' we invoke this.render, and pass the views scope, 'this', to the callback
+    this.collection.on('sort', this.render, this);
   },
 
   render: function() {
